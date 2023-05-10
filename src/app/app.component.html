@@ -30,3 +30,37 @@
     </tr>
   </table>
 </div>
+
+<div>
+  <!-- ... -->
+  <button (click)="isModalOpen = true">Add Appointment</button>
+
+  <div class="modal" *ngIf="isModalOpen">
+    <div class="modal-content">
+      <span class="close" (click)="isModalOpen = false">&times;</span>
+      <h2>Add Appointment</h2>
+      <form>
+        <label>Patient Name</label>
+        <input type="text" [(ngModel)]="newAppointment.patientName" name="patientName">
+        <br>
+        <label>Age</label>
+        <input type="number" [(ngModel)]="newAppointment.age" name="age">
+        <br>
+        <label>Phone Number</label>
+        <input type="text" [(ngModel)]="newAppointment.phoneNumber" name="phoneNumber">
+        <br>
+        <label>Priority</label>
+        <select [(ngModel)]="newAppointment.priority" name="priority">
+          <option value="Low">Low</option>
+          <option value="Medium">Medium</option>
+          <option value="High">High</option>
+        </select>
+        <br>
+        <label>Appointment Time</label>
+        <input type="datetime-local" [(ngModel)]="newAppointment.appointmentTime" name="appointmentTime">
+        <br>
+        <button (click)="addAppointment()">Add</button>
+      </form>
+    </div>
+  </div>
+</div>

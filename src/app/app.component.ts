@@ -10,7 +10,17 @@ import { Appointment } from './appointment';
 export class AppComponent {
   public appArray: Appointment[] = [];
   public selectedAppointment: Appointment | null = null;
-  
+  public isModalOpen = false;
+  public newAppointment: Appointment = {
+    id: 20,
+    patientName: '',
+    age: 0,
+    phoneNumber: '',
+    status: 'Scheduled',
+    priority: 'Low',
+    appointmentTime: new Date()
+  };
+
   constructor(private appointmentService: AppointmentService) {
     this.appointmentService.getAppointments().subscribe({
       next: (response) => {
@@ -57,5 +67,27 @@ export class AppComponent {
       this.appArray.sort((a, b) => a.appointmentTime.getTime() - b.appointmentTime.getTime());
     }
   }
+
+  addAppointment() {
+    this.appointmentService.addAppointment(this.newAppointment).subscribe({
+      next: (response) => {
+        console.log(response);
+        this.appArray.push(response);
+        this.isModalOpen = false;
+      },
+      error: (err) => {
+        console.warn(err)
+      }
+    });
+  }
+
+  openModal() {
+    this.isModalOpen = true;
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+  }
+  
 }
 
