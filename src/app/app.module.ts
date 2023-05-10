@@ -3,10 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
-<<<<<<< HEAD
 import { FormsModule } from '@angular/forms';
-=======
->>>>>>> main
 
 @NgModule({
   declarations: [
@@ -14,12 +11,8 @@ import { FormsModule } from '@angular/forms';
   ],
   imports: [
     BrowserModule,
-<<<<<<< HEAD
     HttpClientModule,
     FormsModule
-=======
-    HttpClientModule
->>>>>>> main
   ],
   providers: [],
   bootstrap: [AppComponent]
