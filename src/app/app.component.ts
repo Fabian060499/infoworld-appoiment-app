@@ -10,6 +10,7 @@ import { Appointment } from './appointment';
 export class AppComponent {
   public appArray: Appointment[] = [];
   public selectedAppointment: Appointment | null = null;
+<<<<<<< HEAD
   public isModalOpen = false;
   public newAppointment: Appointment = {
     id: 20,
@@ -21,6 +22,9 @@ export class AppComponent {
     appointmentTime: new Date()
   };
 
+=======
+  
+>>>>>>> main
   constructor(private appointmentService: AppointmentService) {
     this.appointmentService.getAppointments().subscribe({
       next: (response) => {
@@ -67,6 +71,7 @@ export class AppComponent {
       this.appArray.sort((a, b) => a.appointmentTime.getTime() - b.appointmentTime.getTime());
     }
   }
+<<<<<<< HEAD
 
   addAppointment() {
     this.appointmentService.addAppointment(this.newAppointment).subscribe({
@@ -89,5 +94,7 @@ export class AppComponent {
     this.isModalOpen = false;
   }
   
+=======
+>>>>>>> main
 }
 
