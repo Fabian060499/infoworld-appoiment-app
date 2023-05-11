@@ -15,38 +15,6 @@
     (gridReady)="onGridReady($event)"
   ></ag-grid-angular> 
   </div>
-  <!-- <table>
-    <tr>
-      <th>Id</th>
-      <th>Name</th>
-      <th>Age</th>
-      <th>Phone Number</th>
-      <th>Status</th>
-      <th>Priority</th>
-      <th>Date</th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-    <tr *ngFor="let appointment of appArray; let index=index" (click)="selectSlot(appointment)" [class.selected-row]="appointment.id===selectedAppointment?.id">
-      <td>{{index}}</td>
-      <td>{{appointment.patientName}}</td>
-      <td>{{appointment.age}}</td>
-      <td>{{appointment.phoneNumber}}</td>
-      <td>{{appointment.status}}</td>
-      <td>{{appointment.priority}}</td>
-      <td>{{appointment.appointmentTime | date:"short"}}</td>
-      <td *ngIf="appointment.status === 'Scheduled'">
-        <button (click)="cancelAppointment(appointment)">Cancel</button>
-      </td>
-      <td *ngIf="selectedAppointment && selectedAppointment.status === 'Scheduled'">
-        <button (click)="moveAppointment(appointment)">Move</button>
-      </td>
-      <td >
-        <button (click)="deleteAppointment(appointment)">Delete</button>
-      </td>
-    </tr>
-  </table> -->
 </div>
 
 <div>

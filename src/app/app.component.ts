@@ -4,20 +4,9 @@ import { Appointment } from './appointment';
 import { take } from 'rxjs';
 import { ColDef, GridReadyEvent } from 'ag-grid-community';
 import { HttpClient } from '@angular/common/http';
-import { BtnCellRenderer } from './btn-cell.render';
+import { BtnCellDeleteRenderer } from './btn-renders/btn-cell-delete.render';
+import { BtnCellCancelRenderer } from './btn-renders/btn-cell-cancel.render';
 
-export interface IOlympicData {
-  athlete: string;
-  age: number;
-  country: string;
-  year: number;
-  date: string;
-  sport: string;
-  gold: number;
-  silver: number;
-  bronze: number;
-  total: number;
-}
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -38,42 +27,40 @@ export class AppComponent {
   };
 
   public columnDefs: ColDef[] = [
-    { field: 'id' },
-    { field: 'patientName', rowDrag: true },
-    { field: 'age' },
-    { field: 'phoneNumber', width: 100 },
+    { field: 'id', rowDrag: true, width: 80 },
+    { field: 'patientName'},
+    { field: 'age', width: 80 },
+    { field: 'phoneNumber', width: 150 },
     { field: 'status' },
     { field: 'priority' },
     { field: 'appointmentTime' },
     {
       field: 'delete',
-      cellRenderer: BtnCellRenderer,
+      cellRenderer: BtnCellDeleteRenderer,
       cellRendererParams: {
         clicked:  (appointment: Appointment) => {
-          console.log(appointment);
          this.deleteAppointment(appointment);
         },
       },
-      minWidth: 150,
+      minWidth: 50,
+    },
+    {
+      field: 'cancel',
+      cellRenderer: BtnCellCancelRenderer,
+      cellRendererParams: {
+        clicked:  (appointment: Appointment) => {
+         this.cancelAppointment(appointment);
+        },
+      },
+      minWidth: 50,
     },
   ];
   public rowData!: Appointment[];
-  // public columnDefs: ColDef[] = [
-  //   { field: 'athlete', rowDrag: true },
-  //   { field: 'country' },
-  //   { field: 'year', width: 100 },
-  //   { field: 'date' },
-  //   { field: 'sport' },
-  //   { field: 'gold' },
-  //   { field: 'silver' },
-  //   { field: 'bronze' },
-  // ];
   public defaultColDef: ColDef = {
     width: 170,
     sortable: true,
     filter: true,
   };
-  // public rowData!: IOlympicData[];
 
   constructor(private appointmentService: AppointmentService,private http: HttpClient) {
     this.getAppointments();
@@ -92,40 +79,21 @@ export class AppComponent {
       }
     });
   }
-  // Function to handle the slot selection
-  selectSlot(appointment: Appointment) {
-    // Only allow selection of scheduled appointments
-    if (appointment.status === 'Scheduled') {
-      this.selectedAppointment = appointment;
-    }
-  }
+
   //Function to cancel appointment
   cancelAppointment(appointment: Appointment) {
     appointment.status = "Cancelled";
+    this.appointmentService.updateAppointment(appointment).subscribe({
+      next: () => {
+
+        this.getAppointments();
+      },
+      error: (err) => {
+        console.warn(err)
+      }
+    });
   }
-  // Function to handle the appointment move
-  /**
-   * This function allows the user to move a scheduled appointment to a different time by swapping the
-   * appointment times with another scheduled appointment.
-   * @param {Appointment} targetAppointment - Appointment object representing the appointment that the
-   * selected appointment will be swapped with.
-   */
-  moveAppointment(targetAppointment: Appointment) {
-    // targetAppointment.appointmentTime=new Date(targetAppointment.appointmentTime);
-    // Only allow move of scheduled appointments
-    if (this.selectedAppointment && this.selectedAppointment.status === 'Scheduled') {
-      // Swap the appointments
-      const tempTime = this.selectedAppointment.appointmentTime;
-      this.selectedAppointment.appointmentTime = targetAppointment.appointmentTime;
-      targetAppointment.appointmentTime = tempTime;
-      
-      // Clear the selected appointment
-      this.selectedAppointment = null;
-      
-      // Sort the appointments by time
-      this.appArray.sort((a, b) => a.appointmentTime.getTime() - b.appointmentTime.getTime());
-    }
-  }
+ 
 
   addAppointment() {
     this.appointmentService.addAppointment(this.newAppointment).subscribe({

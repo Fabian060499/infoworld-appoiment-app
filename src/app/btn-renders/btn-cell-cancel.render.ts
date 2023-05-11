@@ -5,10 +5,10 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
 @Component({
   selector: 'btn-cell-renderer',
   template: `
-    <button (click)="btnClickedHandler($event)">Delete</button>
+    <button (click)="btnClickedHandler($event)">Cancel</button>
   `,
 })
-export class BtnCellRenderer implements ICellRendererAngularComp {
+export class BtnCellCancelRenderer implements ICellRendererAngularComp {
   private params: any;
 
   agInit(params: any): void {
@@ -17,7 +17,6 @@ export class BtnCellRenderer implements ICellRendererAngularComp {
 
   btnClickedHandler(event: any) {
     this.params.clicked(this.params.data);
-    console.log(this.params);
   }
 
   refresh() {
