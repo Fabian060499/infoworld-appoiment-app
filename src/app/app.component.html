@@ -1,7 +1,21 @@
 <div>
-  <h1> Appointments </h1>
-
-  <table>
+  <div>
+    <h1> Appointments </h1>
+    <button (click)="isModalOpen = true">Add Appointment</button>
+  </div>
+  <div class="table">
+    <ag-grid-angular
+    style="width: 100%; height: 100%;"
+    class="ag-theme-alpine"
+    [columnDefs]="columnDefs"
+    [defaultColDef]="defaultColDef"
+    [rowDragManaged]="true"
+    [animateRows]="true"
+    [rowData]="rowData"
+    (gridReady)="onGridReady($event)"
+  ></ag-grid-angular> 
+  </div>
+  <!-- <table>
     <tr>
       <th>Id</th>
       <th>Name</th>
@@ -12,9 +26,10 @@
       <th>Date</th>
       <th></th>
       <th></th>
+      <th></th>
     </tr>
-    <tr *ngFor="let appointment of appArray" (click)="selectSlot(appointment)" [class.selected-row]="appointment.id===selectedAppointment?.id">
-      <td>{{appointment.id}}</td>
+    <tr *ngFor="let appointment of appArray; let index=index" (click)="selectSlot(appointment)" [class.selected-row]="appointment.id===selectedAppointment?.id">
+      <td>{{index}}</td>
       <td>{{appointment.patientName}}</td>
       <td>{{appointment.age}}</td>
       <td>{{appointment.phoneNumber}}</td>
@@ -27,13 +42,15 @@
       <td *ngIf="selectedAppointment && selectedAppointment.status === 'Scheduled'">
         <button (click)="moveAppointment(appointment)">Move</button>
       </td>
+      <td >
+        <button (click)="deleteAppointment(appointment)">Delete</button>
+      </td>
     </tr>
-  </table>
+  </table> -->
 </div>
 
 <div>
   <!-- ... -->
-  <button (click)="isModalOpen = true">Add Appointment</button>
 
   <div class="modal" *ngIf="isModalOpen">
     <div class="modal-content">
@@ -44,7 +61,7 @@
         <input type="text" [(ngModel)]="newAppointment.patientName" name="patientName">
         <br>
         <label>Age</label>
-        <input type="number" [(ngModel)]="newAppointment.age" name="age">
+        <input type="text" [(ngModel)]="newAppointment.age" name="age">
         <br>
         <label>Phone Number</label>
         <input type="text" [(ngModel)]="newAppointment.phoneNumber" name="phoneNumber">

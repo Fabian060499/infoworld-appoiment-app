@@ -8,18 +8,18 @@ import { Appointment } from './appointment';
 })
 export class AppointmentService {
 
-  private apiUrl = 'http://localhost:3000/appointments';
+  private apiUrl = 'https://localhost:7104/api/Appointment';
 
   constructor(private http: HttpClient) { }
 
   getAppointments(): Observable<Appointment[]> {
-    return this.http.get<{response:Appointment[]}>(this.apiUrl).pipe(
+    return this.http.get<Appointment[]>(this.apiUrl).pipe(
         map(res => {
-          res.response = res.response.map((app) => {
+          res = res.map((app) => {
             app.appointmentTime = new Date(app.appointmentTime)
             return app;
           })
-          return res.response;
+          return res;
         })
     );
   }

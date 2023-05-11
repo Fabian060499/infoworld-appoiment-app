@@ -1,7 +1,23 @@
 import { Component } from '@angular/core';
 import { AppointmentService } from './appointment.service';
 import { Appointment } from './appointment';
+import { take } from 'rxjs';
+import { ColDef, GridReadyEvent } from 'ag-grid-community';
+import { HttpClient } from '@angular/common/http';
+import { BtnCellRenderer } from './btn-cell.render';
 
+export interface IOlympicData {
+  athlete: string;
+  age: number;
+  country: string;
+  year: number;
+  date: string;
+  sport: string;
+  gold: number;
+  silver: number;
+  bronze: number;
+  total: number;
+}
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -12,7 +28,7 @@ export class AppComponent {
   public selectedAppointment: Appointment | null = null;
   public isModalOpen = false;
   public newAppointment: Appointment = {
-    id: 20,
+    id: 0,
     patientName: '',
     age: 0,
     phoneNumber: '',
@@ -21,18 +37,61 @@ export class AppComponent {
     appointmentTime: new Date()
   };
 
-  constructor(private appointmentService: AppointmentService) {
-    this.appointmentService.getAppointments().subscribe({
+  public columnDefs: ColDef[] = [
+    { field: 'id' },
+    { field: 'patientName', rowDrag: true },
+    { field: 'age' },
+    { field: 'phoneNumber', width: 100 },
+    { field: 'status' },
+    { field: 'priority' },
+    { field: 'appointmentTime' },
+    {
+      field: 'delete',
+      cellRenderer: BtnCellRenderer,
+      cellRendererParams: {
+        clicked:  (appointment: Appointment) => {
+          console.log(appointment);
+         this.deleteAppointment(appointment);
+        },
+      },
+      minWidth: 150,
+    },
+  ];
+  public rowData!: Appointment[];
+  // public columnDefs: ColDef[] = [
+  //   { field: 'athlete', rowDrag: true },
+  //   { field: 'country' },
+  //   { field: 'year', width: 100 },
+  //   { field: 'date' },
+  //   { field: 'sport' },
+  //   { field: 'gold' },
+  //   { field: 'silver' },
+  //   { field: 'bronze' },
+  // ];
+  public defaultColDef: ColDef = {
+    width: 170,
+    sortable: true,
+    filter: true,
+  };
+  // public rowData!: IOlympicData[];
+
+  constructor(private appointmentService: AppointmentService,private http: HttpClient) {
+    this.getAppointments();
+  }
+
+  getAppointments(){
+    this.appointmentService.getAppointments().pipe(take(1)).subscribe({
       next: (response) => {
         console.log(response);
         this.appArray = response;
+        this.rowData = response;
+        console.warn(this.rowData);
       },
       error: (err) => {
         console.warn(err)
       }
     });
   }
-
   // Function to handle the slot selection
   selectSlot(appointment: Appointment) {
     // Only allow selection of scheduled appointments
@@ -74,6 +133,18 @@ export class AppComponent {
         console.log(response);
         this.appArray.push(response);
         this.isModalOpen = false;
+        this.getAppointments();
+      },
+      error: (err) => {
+        console.warn(err)
+      }
+    });
+  }
+
+  deleteAppointment(appointment: Appointment) {
+    this.appointmentService.deleteAppointment(appointment.id).subscribe({
+      next: () => {
+        this.getAppointments();
       },
       error: (err) => {
         console.warn(err)
@@ -89,5 +160,15 @@ export class AppComponent {
     this.isModalOpen = false;
   }
   
+    onGridReady(params: GridReadyEvent<Appointment>) {
+      this.getAppointments();
+    }
+    // onGridReady(params: GridReadyEvent<IOlympicData>) {
+    //   this.http
+    //     .get<IOlympicData[]>(
+    //       'https://www.ag-grid.com/example-assets/olympic-winners.json'
+    //     )
+    //     .subscribe((data) => (this.rowData = data));
+    // }
 }
 
